@@ -15,13 +15,18 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 static const Bool clicktofocus		  = True;		/* Focus client on click */
 static const Bool viewontag         = True;     /* Switch view on tag switch */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const Bool showsystray       = True;     /* False means no systray */
 
 static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "luakit",   NULL,       NULL,       1,            False,        -1 },
+  { "Chromium", NULL,       NULL,       1,            False,        -1 },
 	{ "URxvt",    NULL,       NULL,       1 << 1,       False,        -1 },
 	{ "Smplayer", NULL,		    NULL,		    1 << 2,	      True,		      -1 },
 	{ "Zathura",  NULL,		    NULL,		    1 << 3,		    False,		    -1 },
+  { "Nautilus", NULL,       NULL,       1 << 3,       False,        -1 },
+  { "Skype",    NULL,       NULL,       1 << 4,       True,         -1 },
 };
 
 /* layout(s) */
@@ -41,12 +46,12 @@ static const Layout layouts[] = {
 /* tagging */
 static const Tag tags[] = {
 	/* name       layout           mfact    nmaster */
-	{ "web",      &layouts[4],     -1,      -1 },
-	{ "term",     &layouts[4],     -1,      -1 },
+	{ "web",      &layouts[3],     -1,      -1 },
+	{ "term",     &layouts[3],     -1,      -1 },
 	{ "media",    &layouts[1],     -1,      -1 },
-	{ "file",     &layouts[3],     -1,    	-1 },
-	{ "im",       &layouts[4],     -1,      -1 },
-	{ "misc",	    &layouts[4],	   -1	      -1 },
+	{ "file",     &layouts[2],     -1,    	-1 },
+	{ "im",       &layouts[3],     -1,      -1 },
+	{ "misc",	    &layouts[3],	   -1	      -1 },
 };
 
 /* key definitions */
@@ -64,12 +69,13 @@ static const Tag tags[] = {
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "urxvtc", NULL };
-static const char *quitcmd[]  = { "killall", "startdwm", NULL };
 static const char *lockcmd[] = { "slock", NULL };
-static const char *suspendcmd[] = { "dbus-send", "--system", "--print-reply", "--dest=org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower.Suspend", NULL };
-static const char *hibernatecmd[] = { "dbus-send", "--system", "--print-reply", "--dest=org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower.Hibernate", NULL };
-static const char *rebootcmd[] = { "dbus-send", "--system", "--print-reply", "--dest=org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager.Restart", NULL };
-static const char *shutdowncmd[] = { "dbus-send", "--system", "--print-reply", "--dest=org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager.Stop", NULL };
+static const char *suspendcmd[] = { "systemctl", "suspend", NULL };
+static const char *hibernatecmd[] = { "systemctl", "hibernate", NULL };
+static const char *rebootcmd[] = { "systemctl", "reboot", NULL };
+static const char *shutdowncmd[] = { "systemctl", "shutdown", NULL };
+
+#include "selfrestart.c"
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -114,7 +120,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ALTKEY,				        XK_q,	     spawn,		       {.v = quitcmd} },
+  { MODKEY|ShiftMask,             XK_r,      self_restart,   {0} },
 	{ 0,                            XK_Pause,  spawn,          {.v = lockcmd} },
 	{ ControlMask|ALTKEY,           XK_s,      spawn,          {.v = suspendcmd} },
 	{ ControlMask|ALTKEY,           XK_h,      spawn,          {.v = hibernatecmd} },

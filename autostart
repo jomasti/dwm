@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+urxvtd -q -o -f &
+dropboxd &
+sh ./.fehbg
+xcompmgr &
+anamnesis --start &
+start-pulseaudio-x11 &
+
+while true; do
+	xsetroot -name "$(/home/josh/bin/mpd.py) | $(date +"%a, %b %d %I:%M %p")"
+	sleep 5s
+done

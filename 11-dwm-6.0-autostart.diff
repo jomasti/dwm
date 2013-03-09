@@ -1,0 +1,30 @@
+--- a/dwm.c	2013-03-08 21:11:31.152008647 -0700
++++ b/dwm.c	2013-03-08 21:45:19.958599025 -0700
+@@ -197,6 +197,7 @@
+ static void arrangemon(Monitor *m);
+ static void attach(Client *c);
+ static void attachstack(Client *c);
++static void autostart(void);
+ static void buttonpress(XEvent *e);
+ static void checkotherwm(void);
+ static void cleanup(void);
+@@ -481,6 +482,11 @@
+ }
+ 
+ void
++autostart(void) {
++  system("cd ~/.dwm; ./autostart &");
++}
++
++void
+ buttonpress(XEvent *e) {
+ 	unsigned int i, x, click;
+ 	Arg arg = {0};
+@@ -2675,6 +2681,7 @@
+ 	checkotherwm();
+ 	setup();
+ 	scan();
++  autostart();
+ 	run();
+ 	cleanup();
+ 	XCloseDisplay(dpy);
