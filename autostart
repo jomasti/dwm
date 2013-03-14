@@ -3,7 +3,7 @@
 urxvtd -q -o -f &
 dropboxd &
 sh ./.fehbg
-xcompmgr &
+compton --config ~/.compton.conf -b &
 anamnesis --start &
 start-pulseaudio-x11 &
 
